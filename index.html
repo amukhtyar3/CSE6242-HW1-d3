@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>amukhtyar3</title>
+        <script type="text/javascript" src="d3/d3.v3.min.js"></script>
+        <style>
+        .axis path,
+        .axis line {
+        fill: none;
+        stroke: black;
+        shape-rendering: crispEdges;
+        }
+        .axis text{
+        font-family: sans-serif;
+        font-size : 11px;
+        }
+
+    			div.bar {
+    				display: inline-block;
+    				width: 20px;
+    				height: 75px;
+            margin-right: 2px;
+    				background-color: teal;
+    			}
+
+    		</style>
+        <h1> Aditi Mukhtyar </h1>
+    </head>
+    <body>
+        <script type="text/javascript">
+        var dataset = [];
+  var numDataPoints = 50;
+  var xRange = 100;
+  var yRange = 100;
+  for (var i = 0; i < numDataPoints; i++) {
+      var newNumber1 = Math.round(Math.random() * xRange);
+      var newNumber2 = Math.round(Math.random() * yRange);
+      dataset.push([newNumber1, newNumber2]);      //Add new number to array
+}
+var w = 600;
+var h = 500;
+padding = 50;
+var xscale = d3.scale.linear()
+           .domain([0, d3.max(dataset, function(d) {
+            return d[0]
+           })])
+           .range([padding,w-padding*2]);
+var yscale = d3.scale.linear()
+              .domain([0, d3.max(dataset, function(d) { return d[1]; })])
+              .range([h-padding, padding]);
+var rscale = d3.scale.linear()
+                    .domain([d3.min(dataset, function(d) {
+                        return d[0]
+                    }),
+                    d3.max(dataset, function(d) {
+                        return d[0];
+                    })])
+                    .range([1,5]);
+var meanRadius = d3.mean(dataset, function(d) {
+    return rscale(d[0]);
+  })
+    var svg = d3.select("body")
+        .append("svg")
+        .attr("width", w)
+    .attr("height", h);
+
+svg.selectAll("circle")
+.data(dataset)
+.enter()
+.append("circle")
+.attr("cx", function(d){
+return xscale(d[0]);
+})
+.attr("cy", function(d){
+return yscale(d[1]);
+})
+.attr("r", function(d) {
+      return rscale(d[0]);
+     })
+     .attr("fill", function(d) {
+      if (rscale(d[0]) > meanRadius) {
+          return "blue";
+      }
+      else {
+          return "green";
+      }
+     })
+     svg.selectAll("text")
+        .data(dataset)
+        .enter()
+        .append("text")
+        
+        .attr("x", function(d) {
+         return xscale(d[0]);
+        })
+        .attr("y", function(d) {
+         return yscale(d[1]);
+        })
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "11px");
+        svg.append("g")
+  				.attr("class", "axis")
+  				.attr("transform", "translate(0, "+ (h-padding) +")")
+      			.call(d3.svg.axis()
+                  .scale(xscale)
+                  .orient("bottom"));
+              svg.append("g")
+  				.attr("class", "axis")
+  				.attr("transform", "translate("+ padding +", 0)")
+      			.call(d3.svg.axis()
+                  .scale(yscale)
+                  .orient("left"));
+
+        </script>
+    </body>
+</html>
